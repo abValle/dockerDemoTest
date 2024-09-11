@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:14.13
+    container_name: postgresDocker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: docker_demo_test_production
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: pass123
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: rails_app
+    volumes:
+      - ".:/rails"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://root:pass123@db:5432/docker_demo_test_production
+
+volumes:
+  postgres_data:
